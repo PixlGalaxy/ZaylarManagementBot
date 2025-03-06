@@ -7,10 +7,8 @@ dotenv.config();
 
 const app = express();
 
-// Serve static files from "public", so "/css/tailwind.css" is available
 app.use(express.static('public'));
 
-// SINGLE GET "/" ROUTE – references local Tailwind from /css/tailwind.css
 app.get('/', (req, res) => {
   const html = `
   <!DOCTYPE html>
@@ -102,7 +100,6 @@ app.get('/', (req, res) => {
   res.send(html);
 });
 
-// KEEP THE "/schedule" ROUTE
 app.get('/schedule', (req, res) => {
   try {
     const { shutdownTime, maintenanceEndTime, title, description, channelId } = req.query;
@@ -141,9 +138,6 @@ app.get('/schedule', (req, res) => {
   }
 });
 
-/**
- * Initialize Discord and start the server
- */
 async function main() {
   await initDiscordClient();
   const port = process.env.PORT || 3000;
