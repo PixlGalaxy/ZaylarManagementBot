@@ -8,7 +8,7 @@ import {
 async function getServerStatus(): Promise<string> {
   const loginUrl = process.env.ZAYLAR_LOGIN_URL;
   if (!loginUrl) {
-    console.error("Environment variable ZAYLAR_LOGIN_URL is not defined.");
+    console.error("ZAYLAR_LOGIN_URL is not defined.");
     return "🔴 OFFLINE"; 
   }
 
@@ -35,7 +35,6 @@ async function createEmbed(
   onlineTime: Date
 ) {
   const currentStatus = await getServerStatus();
-
   const statusUrl = "https://onlinestatus.itzgalaxy.com/";
 
   const embed = new EmbedBuilder()
@@ -76,7 +75,7 @@ interface MaintenanceSchedule {
   shutdownTime: Date;
   maintenanceEndTime: Date;
   title: string;
-  description: string; 
+  description: string;
   channelId: string;
 }
 
@@ -100,7 +99,12 @@ export function scheduleMaintenance({
 
       const embed = await createEmbed(description, shutdownTime, maintenanceEndTime);
 
-      await (channel as TextChannel).send({ embeds: [embed] });
+      await (channel as TextChannel).send({
+        content: "@everyone",
+        embeds: [embed],
+        allowedMentions: { parse: ["everyone"] }
+      });
+
       console.log("Maintenance announcement sent successfully.");
     } catch (error) {
       console.error("Failed to send maintenance announcement:", error);
